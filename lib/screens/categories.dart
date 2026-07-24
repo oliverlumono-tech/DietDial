@@ -7,7 +7,7 @@ import 'package:meals/screens/meals.dart';
 import 'package:meals/widgets/category_grid_item.dart';
 
 
-class CategoriesScreen extends StatelessWidget {
+class CategoriesScreen extends StatefulWidget {
   const CategoriesScreen({
     super.key,
     required this.availableMeals,
@@ -15,8 +15,35 @@ class CategoriesScreen extends StatelessWidget {
 
   final List<Meal> availableMeals;
 
+  @override
+  State<CategoriesScreen> createState() => _CategoriesScreenState();
+}
+
+class _CategoriesScreenState extends State<CategoriesScreen> with SingleTickerProviderStateMixin {
+  late AnimationController _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 300),
+      lowerBound: 0,
+      upperBound: 1,
+    );
+
+    _animationController.forward();
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
   void _selectCategory(BuildContext context, Category category ) {
-    final filteredMeals = availableMeals
+    final filteredMeals = widget.availableMeals
     .where((meal) => meal.categories.contains(category.id))
     .toList();
 
@@ -29,10 +56,12 @@ class CategoriesScreen extends StatelessWidget {
       ),
     );
   }
-  
+
   @override
   Widget build(BuildContext context) {
-    return  GridView(
+    return  AnimatedBuilder(
+      animation: _animationController, 
+      child:  GridView(
         padding: const EdgeInsets.all(24),
         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2, 
@@ -45,9 +74,22 @@ class CategoriesScreen extends StatelessWidget {
             CategoryGridItem(category: category, 
             onSelectCategory: () {
               _selectCategory(context, category);
-            },),
+            },
+          ),
         ],
-      );
+      ),
+          builder: (context, child) => SlideTransition(
+        position: Tween<Offset>(
+          begin: const Offset(0, 0.3),
+          end: const Offset(0, 0),
+        ).animate(
+          CurvedAnimation(
+            parent: _animationController, 
+            curve: Curves.easeInOut,
+          ),
+        ), 
+        child: child,
+      ),
+    );
   }
-} 
- 
+}

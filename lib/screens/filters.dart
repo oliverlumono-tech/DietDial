@@ -15,11 +15,11 @@ class FiltersScreen extends ConsumerWidget {
       body: Column(
         children: [
           SwitchListTile(
-            value: activeFilters[Filters.gluttenFree]!, // FIX 3: Fixed typo in enum/key names
+            value: activeFilters[Filters.glutenFree]!,
             onChanged: (isChecked) {
               ref
                   .read(filterProvider.notifier)
-                  .setFilter(Filters.gluttenFree, isChecked);
+                  .setFilter(Filters.glutenFree, isChecked);
             },
             title: Text(
               'Gluten-free',

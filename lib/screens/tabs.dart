@@ -10,7 +10,7 @@ import 'package:meals/providers/favorites_provider.dart';
 
 
 const kInitialFilters = {
-    Filters.gluttenFree: false,
+    Filters.glutenFree: false,
     Filters.lactoseFree: false,
     Filters.vegetarian: false,
     Filters.vegan: false
